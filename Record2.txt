@@ -1,8 +1,0 @@
-Customer forename: Charlie
-Customer surname: Cohen
-Nationality: British
-Age: 33
-Date of birth 22/09/1987
-Years license Held for: 4
-PackageID: Small1
-Total fee: £36
