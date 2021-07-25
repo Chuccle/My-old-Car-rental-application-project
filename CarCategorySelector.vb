@@ -1,4 +1,13 @@
-﻿Public Class CarCategorySelector
+﻿
+Imports System.Data.SqlClient
+Imports System.Data
+Imports System.Collections
+Imports System.IO
+Imports System.Data.OleDb
+
+
+Public Class CarCategorySelector
+
 
 	'Declare a variable that cannot be modified - useful for calculations later on
 	Const VAT = 0.2
@@ -7,7 +16,6 @@
 	Private Penalty As Decimal
 	Private OptionID As String
 	Private TotalPrice As Decimal
-
 
 
 	Private Sub CarCategorySelector_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -40,7 +48,7 @@
 
 	'Depending on radiobutton selection, will use a calculation from referencing previous variables and returned result is assigned to TotalPrice
 	'Option ID is also assigned depending on radiobutton selection
-	Private Sub Save()
+	Private Sub SavetoFile()
 
 		If SaveFilePrompt.ShowDialog = Windows.Forms.DialogResult.OK Then
 
@@ -80,6 +88,53 @@
 
 
 
+	Private Sub savetoDB2()
+
+		Dim style = MsgBoxStyle.YesNo
+		Dim response = MsgBox("Would you like to save this file to the local SQL database?", style)
+		If response = vbNo Then
+			Exit Sub
+		End If
+
+
+
+		Dim connectionString As String
+		Dim sqlCnn As SqlConnection
+		Dim sqlCmd As SqlCommand
+		Dim adapter As New SqlDataAdapter
+		Dim ds As New DataSet
+		''		Dim i As Integer
+		Dim sql As String
+		Dim Forename As String = CustomerDetailsForm.Forename
+		Dim Lastname As String = CustomerDetailsForm.Surname
+		Dim Nationality As String = CustomerDetailsForm.Nationality
+		Dim Age As String = Convert.ToString(CustomerDetailsForm.Age)
+		Dim DOB As String = CustomerDetailsForm.DOB
+		Dim LicenseHeld As String = CustomerDetailsForm.LicenseHeld
+		Dim Total As String = Convert.ToString(FormatCurrency(TotalPrice))
+
+		connectionString = "Data Source=(localdb)\MSSQLLocalDB; Initial Catalog=master;"
+		sql = "Insert into CustomerInfo(Forename, LastName, Nationality, Age, DOB, LicenseYears, OptionID, TotalFee) Values('" + Forename + "','" + Lastname + "','" + Nationality + "','" + Age + "','" + DOB + "','" + LicenseHeld + "','" + OptionID + "','" + Total + "')"
+
+		sqlCnn = New SqlConnection(connectionString)
+		Try
+			sqlCnn.Open()
+			sqlCmd = New SqlCommand(sql, sqlCnn)
+			adapter.SelectCommand = sqlCmd
+			adapter.Fill(ds)
+			''	For i = 0 To ds.Tables(0).Rows.Count - 1
+			''MsgBox(ds.Tables(0).Rows(i).Item(0) & "  --  " & ds.Tables(0).Rows(i).Item(1))
+			''	Next
+			adapter.Dispose()
+			sqlCmd.Dispose()
+			sqlCnn.Close()
+		Catch ex As Exception
+			MsgBox("Connection was unsuccessful: " + ex.Message)
+		End Try
+	End Sub
+
+
+
 	'When the small car image is clicked make small car panel visible and hide other panels
 	Private Sub ImgSmallCar_Click(sender As Object, e As EventArgs) Handles ImgSmallCar.Click
 		PanelSmall.Visible = True
@@ -110,10 +165,11 @@
 	Private Function TotalPriceCalculator(ByVal package As Integer) As Decimal
 		Dim total As Decimal
 		total = (((package * Penalty) + package) * VAT) + ((package * Penalty) + package)
-		Return  total
+		Return total
 
 
 	End Function
+
 	'Declares package integers and assigns them with respective values
 	Private Sub BtnConfirmSmall_Click(sender As Object, e As EventArgs) Handles BtnConfirmSmall.Click
 		Dim Small1Value As Integer = 30
@@ -144,7 +200,9 @@
 
 		End Select
 
-		Save()
+		savetoDB2()
+
+		SavetoFile()
 
 	End Sub
 
@@ -170,9 +228,9 @@
 				OptionID = "Medium30"
 
 		End Select
+		savetoDB2()
 
-
-		Save()
+		SavetoFile()
 
 	End Sub
 
@@ -200,8 +258,10 @@
 
 		End Select
 
+		savetoDB2()
 
-		Save()
+
+		SavetoFile()
 
 	End Sub
 
@@ -209,5 +269,15 @@
 	Private Sub BtnGoBack_Click(sender As Object, e As EventArgs) Handles BtnGoBack.Click
 		Me.Visible = False
 		CustomerDetailsForm.Visible = True
+	End Sub
+
+
+
+	Private Sub exportToAccessMedium_Click(sender As Object, e As EventArgs) Handles exportToAccessMedium.Click
+
+	End Sub
+
+	Private Sub exportToAccessLarge_Click(sender As Object, e As EventArgs) Handles exportToAccessLarge.Click
+
 	End Sub
 End Class
