@@ -1,22 +1,15 @@
-﻿
-Imports System.Data.SqlClient
-Imports System.Data
-Imports System.Collections
-Imports System.IO
-Imports System.Data.OleDb
-
+﻿Imports System.Data.SqlClient
 
 Public Class CarCategorySelector
-
 
 	'Declare a variable that cannot be modified - useful for calculations later on
 	Const VAT = 0.2
 
 	'Declare our variables to be used later on in the output file
 	Private Penalty As Decimal
+
 	Private OptionID As String
 	Private TotalPrice As Decimal
-
 
 	Private Sub CarCategorySelector_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -34,7 +27,6 @@ Public Class CarCategorySelector
 
 			Case = "1"
 				Penalty = 0.3
-
 
 			Case = "2"
 				Penalty = 0.15
@@ -76,7 +68,6 @@ Public Class CarCategorySelector
 			Next
 
 			objwriter.Close()
-
 		Else
 			MsgBox("Please select the package again")
 
@@ -86,8 +77,6 @@ Public Class CarCategorySelector
 
 	End Sub
 
-
-
 	Private Sub savetoDB2()
 
 		Dim style = MsgBoxStyle.YesNo
@@ -95,8 +84,6 @@ Public Class CarCategorySelector
 		If response = vbNo Then
 			Exit Sub
 		End If
-
-
 
 		Dim connectionString As String
 		Dim sqlCnn As SqlConnection
@@ -133,8 +120,6 @@ Public Class CarCategorySelector
 		End Try
 	End Sub
 
-
-
 	'When the small car image is clicked make small car panel visible and hide other panels
 	Private Sub ImgSmallCar_Click(sender As Object, e As EventArgs) Handles ImgSmallCar.Click
 		PanelSmall.Visible = True
@@ -149,7 +134,6 @@ Public Class CarCategorySelector
 		PanelMedium.Visible = True
 		PanelLarge.Visible = False
 
-
 	End Sub
 
 	'When the Large	car image Is clicked make large car panel visible and hide other panels
@@ -157,7 +141,6 @@ Public Class CarCategorySelector
 		PanelSmall.Visible = False
 		PanelMedium.Visible = False
 		PanelLarge.Visible = True
-
 
 	End Sub
 
@@ -167,7 +150,6 @@ Public Class CarCategorySelector
 		total = (((package * Penalty) + package) * VAT) + ((package * Penalty) + package)
 		Return total
 
-
 	End Function
 
 	'Declares package integers and assigns them with respective values
@@ -175,9 +157,6 @@ Public Class CarCategorySelector
 		Dim Small1Value As Integer = 30
 		Dim Small7Value As Integer = 95
 		Dim Small30Value As Integer = 270
-
-
-
 
 		'Depending on radiobutton selection, will use a calculation from referencing previous variables and returned result is assigned to TotalPrice
 		'Option ID is also assigned depending on radiobutton selection
@@ -188,7 +167,6 @@ Public Class CarCategorySelector
 				TotalPrice = TotalPriceCalculator(Small1Value)
 				OptionID = "Small1"
 
-
 			Case RbtnSmall7.Checked = True
 				TotalPrice = TotalPriceCalculator(Small7Value)
 				OptionID = "Small7"
@@ -196,7 +174,6 @@ Public Class CarCategorySelector
 			Case RbtnSmall30.Checked = True
 				TotalPrice = TotalPriceCalculator(Small30Value)
 				OptionID = "Small30"
-
 
 		End Select
 
@@ -211,7 +188,6 @@ Public Class CarCategorySelector
 		Dim Medium1Value As Integer = 40
 		Dim Medium7Value As Integer = 115
 		Dim Medium30Value As Integer = 310
-
 
 		Select Case True
 
@@ -240,8 +216,6 @@ Public Class CarCategorySelector
 		Dim Large7Value As Integer = 130
 		Dim Large30Value As Integer = 340
 
-
-
 		Select Case True
 
 			Case RbtnLarge1.Checked = True
@@ -260,7 +234,6 @@ Public Class CarCategorySelector
 
 		savetoDB2()
 
-
 		SavetoFile()
 
 	End Sub
@@ -271,8 +244,6 @@ Public Class CarCategorySelector
 		CustomerDetailsForm.Visible = True
 	End Sub
 
-
-
 	Private Sub exportToAccessMedium_Click(sender As Object, e As EventArgs) Handles exportToAccessMedium.Click
 
 	End Sub
@@ -280,4 +251,5 @@ Public Class CarCategorySelector
 	Private Sub exportToAccessLarge_Click(sender As Object, e As EventArgs) Handles exportToAccessLarge.Click
 
 	End Sub
+
 End Class
