@@ -4,13 +4,13 @@
     Const VAT = 0.2
 
     'Declare our variables to be used later on in the output file
-    Private Penalty As Decimal
+    Private Penalty As Double
 
     Private PackageType As String
 
     Private PackageDuration As Integer
 
-    Private TotalPrice As Decimal
+    Private TotalPrice As Double
 
     Private Sub CarCategorySelector_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -46,7 +46,7 @@
         If SaveFilePrompt.ShowDialog = Windows.Forms.DialogResult.OK Then
 
             Dim i As Integer
-            Dim arytext(7) As String
+            Dim arytext(8) As String
 
             'We reference the public variables directly from CustomerDetailsForm so we don't have to waste memory space holding the variables in this form
             'We format as currency to automatically assign the prefix of the user's currency and also the amount of decimal places
@@ -56,13 +56,14 @@
             arytext(3) = "Age: " + Convert.ToString(CustomerDetailsForm.Age)
             arytext(4) = "Date of birth " + CustomerDetailsForm.DOB
             arytext(5) = "Years license Held for: " + CustomerDetailsForm.LicenseHeld
-            arytext(6) = "PackageID: " + ""
-            arytext(7) = "Total fee: " + Convert.ToString(FormatCurrency(TotalPrice))
+            arytext(6) = "Package Duration: " + PackageDuration.ToString()
+            arytext(7) = "Package Type: " + PackageType
+            arytext(8) = "Total fee: " + Convert.ToString(FormatCurrency(TotalPrice))
 
             'declare our filename and it's emcoding as a variable
             Dim objwriter As New IO.StreamWriter(SaveFilePrompt.FileName)
 
-            For i = 0 To 7
+            For i = 0 To 8
                 'writes every item in the array on a separate line
                 objwriter.WriteLine(arytext(i))
 
@@ -82,7 +83,9 @@
     Private Sub SavetoDB()
 
         Dim style = MsgBoxStyle.YesNo
+
         Dim response = MsgBox("Would you like to save this file to the local SQL database?", style)
+
         If response = vbNo Then
             Exit Sub
         End If
@@ -90,8 +93,10 @@
 
         Dim SQL = New SQLComponent
 
+        'Add all our values from this class and the previous class for our query'
         SQL.Parameterise(TotalPrice, PackageDuration, PackageType)
 
+        'perform query operation'
         SQL.Query()
 
         Exit Sub
@@ -103,7 +108,8 @@
         PanelSmall.Visible = True
         PanelMedium.Visible = False
         PanelLarge.Visible = False
-
+        RbtnSmall1.Checked = True
+        PackageType = "Small"
     End Sub
 
     'When the Medium image is clicked make medium car panel visible and hide other panels
@@ -111,7 +117,8 @@
         PanelSmall.Visible = False
         PanelMedium.Visible = True
         PanelLarge.Visible = False
-
+        RbtnMedium1.Checked = True
+        PackageType = "Medium"
     End Sub
 
     'When the Large	car image Is clicked make large car panel visible and hide other panels
@@ -119,13 +126,15 @@
         PanelSmall.Visible = False
         PanelMedium.Visible = False
         PanelLarge.Visible = True
-
+        RbtnLarge1.Checked = True
+        PackageType = "Large"
     End Sub
 
     'instead of repeating the exact same operation over and over i can simply reference it and write it out once
-    Private Function TotalPriceCalculator(ByVal package As Integer) As Decimal
-        Dim total As Decimal
-        total = (((package * Penalty) + package) * VAT) + ((package * Penalty) + package)
+    Private Function TotalPriceCalculator(package As Double) As Double
+
+        Dim total As Double = (((package * Penalty) + package) * VAT) + ((package * Penalty) + package)
+
         Return total
 
     End Function
@@ -133,132 +142,107 @@
 
 
 
-    Private Sub PackageCheck()
+    Private Sub PackageCheck(rBtn1 As RadioButton, rBtn2 As RadioButton, rBtn3 As RadioButton)
+
+        Dim multiplier As Double
+
+
+        Select Case PackageType
+
+            Case "Small"
+                multiplier = 1
+
+            Case "Medium"
+                multiplier = 1.33
+
+            Case "Large"
+                multiplier = 1.5
+
+        End Select
 
 
 
+        Dim oneDayCost As Double = 30 * multiplier
+        Dim sevenDayCost As Double = 95 * multiplier
+        Dim thirtyDayCost As Double = 270 * multiplier
 
-
-
-
-
-    End Sub
-
-
-
-
-
-
-
-    'Declares package integers and assigns them with respective values
-    Private Sub BtnConfirmSmall_Click(sender As Object, e As EventArgs) Handles BtnConfirmSmall.Click
-        Dim oneDayCost As Integer = 30
-        Dim sevenDayCost As Integer = 95
-        Dim thirtyDayCost As Integer = 270
-
-        PackageType = "Small"
         'Depending on radiobutton selection, will use a calculation from referencing previous variables and returned result is assigned to TotalPrice
         'Option ID is also assigned depending on radiobutton selection
 
 
         Select Case True
 
-            Case RbtnSmall1.Checked = True
+            Case rBtn1.Checked = True
                 TotalPrice = TotalPriceCalculator(oneDayCost)
                 PackageDuration = 1
 
-            Case RbtnSmall7.Checked = True
+            Case rBtn2.Checked = True
                 TotalPrice = TotalPriceCalculator(sevenDayCost)
                 PackageDuration = 7
 
-            Case RbtnSmall30.Checked = True
+            Case rBtn3.Checked = True
                 TotalPrice = TotalPriceCalculator(thirtyDayCost)
                 PackageDuration = 30
 
         End Select
 
+
+    End Sub
+
+
+
+
+    Private Sub BtnConfirmSmall_Click(sender As Object, e As EventArgs) Handles BtnConfirmSmall.Click
+
+        PackageCheck(RbtnSmall1, RbtnMedium7, RbtnMedium30)
         SavetoFile()
 
     End Sub
 
-    'Declares package integers and assigns them with respective values
+
     Private Sub BtnConfirmMedium_Click(sender As Object, e As EventArgs) Handles BtnConfirmMedium.Click
-        Dim oneDayCost As Integer = 40
-        Dim sevenDayCost As Integer = 115
-        Dim thirtyDayCost As Integer = 310
 
-        PackageType = "Medium"
-
-        Select Case True
-
-            Case RbtnMedium1.Checked = True
-                TotalPrice = TotalPriceCalculator(oneDayCost)
-                PackageDuration = 1
-
-            Case RbtnMedium7.Checked = True
-                TotalPrice = TotalPriceCalculator(sevenDayCost)
-                PackageDuration = 7
-
-            Case RbtnMedium30.Checked = True
-                TotalPrice = TotalPriceCalculator(thirtyDayCost)
-                PackageDuration = 30
-
-        End Select
-
+        PackageCheck(RbtnMedium1, RbtnMedium7, RbtnMedium30)
         SavetoFile()
 
     End Sub
 
-    'Declares package integers and assigns them with respective values
+
     Private Sub BtnConfirmLarge_Click(sender As Object, e As EventArgs) Handles BtnConfirmLarge.Click
-        Dim oneDayCost As Integer = 45
-        Dim sevenDayCost As Integer = 130
-        Dim thirtyDayCost As Integer = 340
-
-        PackageType = "Large"
-
-        Select Case True
-
-            Case RbtnLarge1.Checked = True
-                TotalPrice = TotalPriceCalculator(oneDayCost)
-                PackageDuration = 1
-
-            Case RbtnLarge7.Checked = True
-                TotalPrice = TotalPriceCalculator(sevenDayCost)
-                PackageDuration = 7
-
-            Case RbtnLarge30.Checked = True
-                TotalPrice = TotalPriceCalculator(thirtyDayCost)
-                PackageDuration = 30
-
-        End Select
 
 
+        PackageCheck(RbtnLarge1, RbtnLarge7, RbtnLarge30)
         SavetoFile()
-
-
-
-
 
     End Sub
 
-    'Hides current form and makes other form visible
+
     Private Sub BtnGoBack_Click(sender As Object, e As EventArgs) Handles BtnGoBack.Click
+
         Me.Visible = False
         CustomerDetailsForm.Visible = True
+
     End Sub
 
     Private Sub ExportToDBSmall_Click(sender As Object, e As EventArgs) Handles exportToDBSmall.Click
 
+        PackageCheck(RbtnSmall1, RbtnSmall7, RbtnSmall30)
         SavetoDB()
 
     End Sub
 
     Private Sub ExportToDBMedium_Click(sender As Object, e As EventArgs) Handles exportToDBMedium.Click
+
+        PackageCheck(RbtnMedium1, RbtnMedium7, RbtnMedium30)
         SavetoDB()
+
     End Sub
 
     Private Sub ExportToDBLarge_Click(sender As Object, e As EventArgs) Handles exportToDBLarge.Click
+
+        PackageCheck(RbtnLarge1, RbtnLarge7, RbtnLarge30)
         SavetoDB()
+
     End Sub
+
 End Class

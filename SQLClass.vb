@@ -3,11 +3,11 @@ Imports System.Data.SqlClient
 Public Class SQLComponent
 
     '' Change this to your settings
-    Private Property ConnectionString = "Data Source=(localdb)\MSSQLLocalDB; Initial Catalog=test;"
+    Private Property ConnectionString As String = "Data Source=(localdb)\MSSQLLocalDB; Initial Catalog=test;"
 
     ReadOnly parameterList As New List(Of SqlParameter)
 
-    Public Sub Parameterise(TotalPrice As Decimal, PackageDuration As Integer, PackageType As String)
+    Public Sub Parameterise(TotalPrice As Double, PackageDuration As Integer, PackageType As String)
 
 
 
@@ -59,7 +59,7 @@ Public Class SQLComponent
 
     End Sub
 
-    Private Function QueryHelper(adapter As SqlDataAdapter, sqlCnn As SqlConnection)
+    Private Function QueryHelper(adapter As SqlDataAdapter, sqlCnn As SqlConnection) As Integer()
 
         Dim Sql(1) As String
 
@@ -70,7 +70,6 @@ Public Class SQLComponent
 
 
         Sql(1) = "SELECT PackageTypeID FROM PackageType WHERE Type = @Type"
-
 
 
         For i As Integer = 0 To 1
@@ -112,7 +111,7 @@ Public Class SQLComponent
             End Try
 
 
-            id(i) = ds.Tables("results").Rows(0).Item(0)
+            id(i) = Convert.ToInt32(ds.Tables("results").Rows(0).Item(0))
 
 
         Next
