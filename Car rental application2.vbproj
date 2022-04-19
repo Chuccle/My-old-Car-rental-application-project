@@ -96,6 +96,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SQLClass.vb" />
     <Compile Include="Customer detail entry form.vb">
       <SubType>Form</SubType>
     </Compile>
