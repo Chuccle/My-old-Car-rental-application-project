@@ -1,25 +1,22 @@
 ﻿
 Imports System.Data.SqlClient
-Public Class SQLComponent
+Public Module SQLComponent
 
     '' Change this to your settings
     Private Property ConnectionString As String = "Data Source=(localdb)\MSSQLLocalDB; Initial Catalog=test;"
 
-    ReadOnly parameterList As New List(Of SqlParameter)
+    Private ReadOnly parameterList As New List(Of SqlParameter)
 
-    Public Sub Parameterise(TotalPrice As Double, PackageDuration As Integer, PackageType As String)
-
-
+    Public Sub Parameterise()
 
         parameterList.Add(New SqlParameter("@Type", SqlDbType.VarChar, 50) With {
-            .Value = PackageType
+            .Value = CarCategorySelector.PackageType
         })
 
 
         parameterList.Add(New SqlParameter("@Length", SqlDbType.Int) With {
-            .Value = PackageDuration
+            .Value = CarCategorySelector.PackageDuration
         })
-
 
 
         parameterList.Add(New SqlParameter("@Forename", SqlDbType.VarChar, 50) With {
@@ -53,7 +50,7 @@ Public Class SQLComponent
 
 
         parameterList.Add(New SqlParameter("@Total", SqlDbType.VarChar, 10) With {
-            .Value = Convert.ToString(FormatCurrency(TotalPrice))
+            .Value = Convert.ToString(FormatCurrency(CarCategorySelector.TotalPrice))
         })
 
 
@@ -123,7 +120,6 @@ Public Class SQLComponent
 
     Public Sub Query()
 
-
         If (parameterList.Count = 0) Then
 
             MsgBox("error, please run parameterise method before using the Query method")
@@ -132,8 +128,6 @@ Public Class SQLComponent
 
 
         End If
-
-
 
         Dim adapter As New SqlDataAdapter
 
@@ -186,4 +180,4 @@ Public Class SQLComponent
 
     End Sub
 
-End Class
+End Module

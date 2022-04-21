@@ -6,11 +6,12 @@
     'Declare our variables to be used later on in the output file
     Private Penalty As Double
 
-    Private PackageType As String
 
-    Private PackageDuration As Integer
+    Public PackageDuration As Integer
 
-    Private TotalPrice As Double
+    Public PackageType As String
+
+    Public TotalPrice As Double
 
     Private Sub CarCategorySelector_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -39,17 +40,22 @@
 
     End Sub
 
-    'Depending on radiobutton selection, will use a calculation from referencing previous variables and returned result is assigned to TotalPrice
-    'Option ID is also assigned depending on radiobutton selection
     Private Sub SavetoFile()
+
+
+
 
         If SaveFilePrompt.ShowDialog = Windows.Forms.DialogResult.OK Then
 
             Dim i As Integer
             Dim arytext(8) As String
 
+
             'We reference the public variables directly from CustomerDetailsForm so we don't have to waste memory space holding the variables in this form
             'We format as currency to automatically assign the prefix of the user's currency and also the amount of decimal places
+
+
+
             arytext(0) = "Customer forename: " + CustomerDetailsForm.Forename
             arytext(1) = "Customer surname: " + CustomerDetailsForm.Surname
             arytext(2) = "Nationality: " + CustomerDetailsForm.Nationality
@@ -90,14 +96,11 @@
             Exit Sub
         End If
 
-
-        Dim SQL = New SQLComponent
-
         'Add all our values from this class and the previous class for our query'
-        SQL.Parameterise(TotalPrice, PackageDuration, PackageType)
+        Parameterise()
 
         'perform query operation'
-        SQL.Query()
+        Query()
 
         Exit Sub
 
@@ -133,13 +136,9 @@
     'instead of repeating the exact same operation over and over i can simply reference it and write it out once
     Private Function TotalPriceCalculator(package As Double) As Double
 
-        Dim total As Double = (((package * Penalty) + package) * VAT) + ((package * Penalty) + package)
-
-        Return total
+        Return (((package * Penalty) + package) * VAT) + ((package * Penalty) + package)
 
     End Function
-
-
 
 
     Private Sub PackageCheck(rBtn1 As RadioButton, rBtn2 As RadioButton, rBtn3 As RadioButton)
@@ -190,8 +189,6 @@
     End Sub
 
 
-
-
     Private Sub BtnConfirmSmall_Click(sender As Object, e As EventArgs) Handles BtnConfirmSmall.Click
 
         PackageCheck(RbtnSmall1, RbtnMedium7, RbtnMedium30)
@@ -217,13 +214,6 @@
     End Sub
 
 
-    Private Sub BtnGoBack_Click(sender As Object, e As EventArgs) Handles BtnGoBack.Click
-
-        Me.Visible = False
-        CustomerDetailsForm.Visible = True
-
-    End Sub
-
     Private Sub ExportToDBSmall_Click(sender As Object, e As EventArgs) Handles exportToDBSmall.Click
 
         PackageCheck(RbtnSmall1, RbtnSmall7, RbtnSmall30)
@@ -242,6 +232,13 @@
 
         PackageCheck(RbtnLarge1, RbtnLarge7, RbtnLarge30)
         SavetoDB()
+
+    End Sub
+
+    Private Sub BtnGoBack_Click(sender As Object, e As EventArgs) Handles BtnGoBack.Click
+
+        Visible = False
+        CustomerDetailsForm.Visible = True
 
     End Sub
 
