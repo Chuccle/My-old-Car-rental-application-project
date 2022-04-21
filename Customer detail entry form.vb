@@ -1,17 +1,5 @@
 ﻿Public Class CustomerDetailsForm
 
-    'we declared these variables as puclic to allow them to be referenced by other classes
-    Public DOB As String
-    Public LicenseHeld As String
-    Public Forename As String
-    Public Surname As String
-    Public Age As Integer
-    Public Nationality As String
-    Public PackageType As String
-    Public PackageDuration As Integer
-    Public TotalPrice As String
-
-
     'Extracts year part from dob and uses today's date to run subtraction operation which calculates age, if d.o.b exceeds today's date will give negative values
     Private Function GetCurrentAge(dob As Date) As Integer
 
@@ -40,12 +28,14 @@
         If Not ValidateCombobox(CboxNationality) Then Exit Sub
 
         'assigns public variables values for use in next form
-        Age = GetCurrentAge(Convert.ToDateTime(TxtDOB.Text))
-        Nationality = CboxNationality.SelectedItem.ToString()
-        Forename = TxtForename.Text
-        Surname = TxtSurname.Text
-        DOB = TxtDOB.Text
-        LicenseHeld = CboxLicenseHeld.SelectedItem.ToString()
+
+        AddOrUpdate("Age:", GetCurrentAge(Convert.ToDateTime(TxtDOB.Text)))
+        AddOrUpdate("Nationality:", CboxNationality.SelectedItem.ToString())
+        AddOrUpdate("Forename:", TxtForename.Text)
+        AddOrUpdate("Surname:", TxtSurname.Text)
+        AddOrUpdate("Date of birth:", TxtDOB.Text)
+        AddOrUpdate("Years license held for:", CboxLicenseHeld.SelectedItem)
+
 
         Dim msg = "You inputted:" + vbCrLf + vbCrLf + TxtForename.Text _
             + " " + TxtSurname.Text + vbCrLf + TxtDOB.Text + vbCrLf +
@@ -63,7 +53,7 @@
             Exit Sub
 
             'If Age in range between 23 and 0 then create custom messagebox and restart application
-        ElseIf Age < 24 Then
+        ElseIf 24 < 24 Then
 
             MsgBox("Age is below 24, Please review the highlighted field", MsgBoxStyle.OkOnly)
 

@@ -10,47 +10,46 @@ Public Module SQLComponent
     Public Sub Parameterise()
 
         parameterList.Add(New SqlParameter("@Type", SqlDbType.VarChar, 50) With {
-            .Value = CarCategorySelector.PackageType
+            .Value = customerDataDict("Package type:")
         })
 
 
         parameterList.Add(New SqlParameter("@Length", SqlDbType.Int) With {
-            .Value = CarCategorySelector.PackageDuration
+            .Value = customerDataDict("Package duration:")
         })
 
 
         parameterList.Add(New SqlParameter("@Forename", SqlDbType.VarChar, 50) With {
-            .Value = CustomerDetailsForm.Forename
+            .Value = customerDataDict("Forename:")
         })
 
-
         parameterList.Add(New SqlParameter("@Surname", SqlDbType.VarChar, 50) With {
-            .Value = CustomerDetailsForm.Surname
+            .Value = customerDataDict("Surname:")
         })
 
 
         parameterList.Add(New SqlParameter("@Nationality", SqlDbType.VarChar, 50) With {
-            .Value = CustomerDetailsForm.Nationality
+            .Value = customerDataDict("Nationality:")
         })
 
 
         parameterList.Add(New SqlParameter("@Age", SqlDbType.Int) With {
-            .Value = CustomerDetailsForm.Age
+            .Value = customerDataDict("Age:")
         })
 
 
         parameterList.Add(New SqlParameter("@DOB", SqlDbType.VarChar, 8) With {
-            .Value = CustomerDetailsForm.DOB
+            .Value = customerDataDict("Date of birth:")
         })
 
 
         parameterList.Add(New SqlParameter("@LicenseHeld", SqlDbType.Int) With {
-            .Value = CustomerDetailsForm.LicenseHeld
+            .Value = customerDataDict("Years license held for:")
         })
 
 
         parameterList.Add(New SqlParameter("@Total", SqlDbType.VarChar, 10) With {
-            .Value = Convert.ToString(FormatCurrency(CarCategorySelector.TotalPrice))
+            .Value = customerDataDict("Total price:")
         })
 
 

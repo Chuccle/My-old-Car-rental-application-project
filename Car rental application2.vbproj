@@ -107,6 +107,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomerDict.vb" />
     <Compile Include="ValidationComponent.vb" />
     <Compile Include="SQLComponent.vb" />
     <Compile Include="Customer detail entry form.vb">
