@@ -1,4 +1,4 @@
-﻿Public Class ValidationComponent
+﻿Public Module ValidationComponent
 
 
     Public Function ValidateName(TxtName As TextBox) As Boolean
@@ -67,7 +67,7 @@
         'If no value is selected from CboxNationality, create custom message box and stop current sequence
 
         If ComboBox.SelectedItem Is Nothing Then
-            MsgBox("Please fill in the highlighted field", MsgBoxStyle.OkOnly)
+            Dim msgBoxResult = MsgBox("Please fill in the highlighted field", MsgBoxStyle.OkOnly)
             ComboBox.Focus()
             Return False
 
@@ -78,4 +78,4 @@
     End Function
 
 
-End Class
+End Module

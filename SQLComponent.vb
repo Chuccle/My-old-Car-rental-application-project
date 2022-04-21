@@ -1,59 +1,55 @@
 ﻿
 Imports System.Data.SqlClient
-Public Class SQLComponent
+Public Module SQLComponent
 
     '' Change this to your settings
     Private Property ConnectionString As String = "Data Source=(localdb)\MSSQLLocalDB; Initial Catalog=test;"
 
-    ReadOnly parameterList As New List(Of SqlParameter)
+    Private ReadOnly parameterList As New List(Of SqlParameter)
 
-    Public Sub Parameterise(TotalPrice As Double, PackageDuration As Integer, PackageType As String)
-
-
+    Public Sub Parameterise()
 
         parameterList.Add(New SqlParameter("@Type", SqlDbType.VarChar, 50) With {
-            .Value = PackageType
+            .Value = customerDataDict("Package type:")
         })
 
 
         parameterList.Add(New SqlParameter("@Length", SqlDbType.Int) With {
-            .Value = PackageDuration
+            .Value = customerDataDict("Package duration:")
         })
-
 
 
         parameterList.Add(New SqlParameter("@Forename", SqlDbType.VarChar, 50) With {
-            .Value = CustomerDetailsForm.Forename
+            .Value = customerDataDict("Forename:")
         })
 
-
         parameterList.Add(New SqlParameter("@Surname", SqlDbType.VarChar, 50) With {
-            .Value = CustomerDetailsForm.Surname
+            .Value = customerDataDict("Surname:")
         })
 
 
         parameterList.Add(New SqlParameter("@Nationality", SqlDbType.VarChar, 50) With {
-            .Value = CustomerDetailsForm.Nationality
+            .Value = customerDataDict("Nationality:")
         })
 
 
         parameterList.Add(New SqlParameter("@Age", SqlDbType.Int) With {
-            .Value = CustomerDetailsForm.Age
+            .Value = customerDataDict("Age:")
         })
 
 
         parameterList.Add(New SqlParameter("@DOB", SqlDbType.VarChar, 8) With {
-            .Value = CustomerDetailsForm.DOB
+            .Value = customerDataDict("Date of birth:")
         })
 
 
         parameterList.Add(New SqlParameter("@LicenseHeld", SqlDbType.Int) With {
-            .Value = CustomerDetailsForm.LicenseHeld
+            .Value = customerDataDict("Years license held for:")
         })
 
 
         parameterList.Add(New SqlParameter("@Total", SqlDbType.VarChar, 10) With {
-            .Value = Convert.ToString(FormatCurrency(TotalPrice))
+            .Value = customerDataDict("Total price:")
         })
 
 
@@ -123,7 +119,6 @@ Public Class SQLComponent
 
     Public Sub Query()
 
-
         If (parameterList.Count = 0) Then
 
             MsgBox("error, please run parameterise method before using the Query method")
@@ -132,8 +127,6 @@ Public Class SQLComponent
 
 
         End If
-
-
 
         Dim adapter As New SqlDataAdapter
 
@@ -186,4 +179,4 @@ Public Class SQLComponent
 
     End Sub
 
-End Class
+End Module

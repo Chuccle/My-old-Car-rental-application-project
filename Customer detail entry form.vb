@@ -1,18 +1,9 @@
 ﻿Public Class CustomerDetailsForm
 
-    'we declared these variables as puclic to allow them to be referenced by another form class
-    Public DOB As String
-    Public LicenseHeld As String
-    Public Forename As String
-    Public Surname As String
-    Public Age As Integer
-    Public Nationality As String
-
     'Extracts year part from dob and uses today's date to run subtraction operation which calculates age, if d.o.b exceeds today's date will give negative values
     Private Function GetCurrentAge(dob As Date) As Integer
-        Dim age As Integer
 
-        age = Today.Year - dob.Year
+        Dim age As Integer = Today.Year - dob.Year
 
         If (dob > Today.AddYears(-age)) Then age -= 1
 
@@ -22,30 +13,28 @@
 
     Private Sub BtnSubmitDetails_Click(sender As Object, e As EventArgs) Handles BtnSubmitDetails.Click
 
-        Dim Validation As New ValidationComponent
-
-        If Not Validation.ValidateName(TxtForename) Then Exit Sub
+        If Not ValidateName(TxtForename) Then Exit Sub
 
 
-        If Not Validation.ValidateName(TxtSurname) Then Exit Sub
+        If Not ValidateName(TxtSurname) Then Exit Sub
 
 
-        If Not Validation.ValidateDOB(TxtDOB) Then Exit Sub
+        If Not ValidateDOB(TxtDOB) Then Exit Sub
 
 
-        If Not Validation.ValidateCombobox(CboxLicenseHeld) Then Exit Sub
+        If Not ValidateCombobox(CboxLicenseHeld) Then Exit Sub
 
 
-        If Not Validation.ValidateCombobox(CboxNationality) Then Exit Sub
+        If Not ValidateCombobox(CboxNationality) Then Exit Sub
 
         'assigns public variables values for use in next form
-        Age = GetCurrentAge(Convert.ToDateTime(TxtDOB.Text))
-        Nationality = CboxNationality.SelectedItem.ToString()
-        Forename = TxtForename.Text
-        Surname = TxtSurname.Text
-        DOB = TxtDOB.Text
-        LicenseHeld = CboxLicenseHeld.SelectedItem.ToString()
 
+        AddOrUpdate("Age:", GetCurrentAge(Convert.ToDateTime(TxtDOB.Text)))
+        AddOrUpdate("Nationality:", CboxNationality.SelectedItem.ToString())
+        AddOrUpdate("Forename:", TxtForename.Text)
+        AddOrUpdate("Surname:", TxtSurname.Text)
+        AddOrUpdate("Date of birth:", TxtDOB.Text)
+        AddOrUpdate("Years license held for:", CboxLicenseHeld.SelectedItem)
 
 
         Dim msg = "You inputted:" + vbCrLf + vbCrLf + TxtForename.Text _
@@ -64,7 +53,7 @@
             Exit Sub
 
             'If Age in range between 23 and 0 then create custom messagebox and restart application
-        ElseIf Age < 24 Then
+        ElseIf 24 < 24 Then
 
             MsgBox("Age is below 24, Please review the highlighted field", MsgBoxStyle.OkOnly)
 
@@ -84,6 +73,7 @@
 
     'Will restrict input to strictly letters and a backspace
     Private Sub TxtForename_Keypress(ByVal sender As Object, ByVal e As KeyPressEventArgs) Handles TxtForename.KeyPress
+
         e.Handled = True
 
         If e.KeyChar Like "[A-z]" Or e.KeyChar = Chr(&H8) Then e.Handled = False
@@ -92,13 +82,16 @@
 
     'Will restrict input to strictly letters and a backspace
     Private Sub TxtSurname_Keypress(ByVal sender As Object, ByVal e As KeyPressEventArgs) Handles TxtSurname.KeyPress
+
         e.Handled = True
 
         If e.KeyChar Like "[A-z]" Or e.KeyChar = Chr(&H8) Then e.Handled = False
+
     End Sub
 
     'Will restrict input to strictly letters and a backspace
     Private Sub TxtDOB_Keypress(ByVal sender As Object, ByVal e As KeyPressEventArgs)
+
         e.Handled = True
 
         If IsNumeric(e.KeyChar) Or e.KeyChar = Chr(&H8) Then e.Handled = False
@@ -106,12 +99,10 @@
     End Sub
 
     Private Sub AutoCapitalize(textbox As TextBox)
-        Dim startPos As Integer
-        Dim selectionLength As Integer
 
-        ' store the cursor position and selection length prior to changing the text
-        startPos = textbox.SelectionStart
-        selectionLength = textbox.SelectionLength
+        'store the cursor position and selection length prior to changing the text
+        Dim startPos As Integer = textbox.SelectionStart
+        Dim selectionLength As Integer = textbox.SelectionLength
 
         'make the neccesary changes
         If textbox.TextLength > 1 Then
